@@ -20,8 +20,12 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
+      - name: Board Details
+        run: arduino-cli board details esp32:esp32:esp32doit-devkit-v1
+      
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 --output-dir output compiler.ino
+        run: arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1:PartitionScheme=rainmaker_4MB --output-dir output compiler.ino
+      
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
