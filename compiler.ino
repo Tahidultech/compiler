@@ -4,7 +4,7 @@
 #include "WiFiProv.h"
 
 #define DEFAULT_POWER_MODE false
-const char *service_name = "PROV_SONOFF_DUALR3";
+const char *service_name = "PROV_SONOFF";
 const char *pop = "123456";
 
 // GPIO for push button
