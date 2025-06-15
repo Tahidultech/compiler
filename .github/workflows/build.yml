@@ -24,7 +24,7 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
           echo "$HOME/bin" >> $GITHUB_PATH
 
-      - name: Check arduino-cli version (verifies install and PATH)
+      - name: Check arduino-cli version
         run: arduino-cli version
 
       - name: Install ESP32 core
@@ -40,7 +40,15 @@ jobs:
       - name: Show available partitions
         run: |
           ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
-          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/huge_app.csv
+          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/huge_app.csv || echo "huge_app.csv not found"
+
+      - name: Compile Sketch with default partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1 \
+            --output-dir output_default \
+            --verbose \
+            compiler.ino
 
       - name: Compile Sketch with huge_app partition
         run: |
@@ -51,8 +59,14 @@ jobs:
             --verbose \
             compiler.ino
 
-      - name: Upload compiled binaries
+      - name: Upload binaries (default partition)
         uses: actions/upload-artifact@v4
         with:
-          name: esp32-binaries
+          name: esp32-binaries-default
+          path: output_default/*.bin
+
+      - name: Upload binaries (huge_app partition)
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-binaries-huge
           path: output_huge/*.bin
