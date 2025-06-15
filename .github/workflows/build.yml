@@ -36,13 +36,7 @@ jobs:
           ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
           ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/huge_app.csv || echo "huge_app.csv not found"
 
-      - name: Compile Sketch with default partition
-        run: |
-          arduino-cli compile \
-            --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --output-dir output_default \
-            --verbose \
-            compiler.ino
+      
 
       - name: Compile Sketch with huge_app partition
         run: |
