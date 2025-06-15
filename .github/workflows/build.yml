@@ -19,10 +19,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install arduino-cli
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "$HOME/bin" >> $GITHUB_PATH
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
 
       - name: Check arduino-cli version
         run: arduino-cli version
