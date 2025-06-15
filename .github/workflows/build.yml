@@ -1,4 +1,4 @@
-name: Build Firmware v4
+name: Build Firmware
 
 on:
   push:
@@ -20,11 +20,20 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Compile Sketch
-        run: arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 --output-dir output compiler.ino
+      - name: Patch custom board definition
+        run: |
+          mkdir -p $HOME/.arduino15/packages/esp32/hardware/esp32/3.2.0/
+          cp .boardfix/boards.local.txt $HOME/.arduino15/packages/esp32/hardware/esp32/3.2.0/
+
+      - name: Compile Sketch with RainMaker Partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1.rainmaker \
+            --output-dir output \
+            compiler.ino
+            --verbose
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: output/compiler.ino.bin
-          
