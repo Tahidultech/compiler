@@ -20,13 +20,13 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Compile Sketch with RainMaker 4MB Partition
+      - name: Compile Sketch with RainMaker 4MB Partition (esp32c3)
         run: |
-          arduino-cli compile \
-          --fqbn esp32:esp32:esp32 \
-          --build-property build.partitions=rainmaker_4MB_no_ota \
-          --output-dir output \
-          compiler.ino
+           arduino-cli compile \
+             --fqbn esp32:esp32:esp32c3 \
+             --build-property build.partitions=rainmaker_4MB_no_ota \
+             --output-dir output \
+             compiler.ino
 
 
       - name: Upload a Build Artifact
