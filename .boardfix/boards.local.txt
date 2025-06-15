@@ -1,0 +1,4 @@
+esp32doit-devkit-v1.rainmaker.name=ESP32 DevKit (RainMaker 4MB)
+esp32doit-devkit-v1.rainmaker.build.partitions=rainmaker_4MB_no_ota
+esp32doit-devkit-v1.rainmaker.build.board=ESP32_DEV
+esp32doit-devkit-v1.rainmaker.upload.maximum_size=3145728
