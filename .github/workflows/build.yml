@@ -1,9 +1,7 @@
-name: ESP32 Build
+name: Build Firmware v4
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -12,50 +10,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python (needed for arduino-cli)
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+        uses: actions/checkout@v3
 
       - name: Set up Arduino CLI
         uses: arduino/setup-arduino-cli@v1
 
-      - name: Check arduino-cli version
-        run: arduino-cli version
-
-      - name: Install ESP32 core
+      - name: Install ESP32 Board
         run: |
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-    
-      - name: Show available partitions
-        run: |
-          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
-          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/huge_app.csv || echo "huge_app.csv not found"
-
-      
-
-      - name: Compile Sketch with huge_app partition (LTO)
-        run: |
-          arduino-cli compile \
-           --fqbn esp32:esp32:esp32wrover \
-           --build-property build.partitions=huge_app \
-           --build-property build.extra_flags="-flto" \
-           --output-dir output_huge \
-           --verbose \
-           compiler.ino
-
-      - name: Upload binaries (default partition)
-        uses: actions/upload-artifact@v4
+      - name: Compile Sketch
+        run: arduino-cli compile --fqbn esp32:esp32:esp32wrover --output-dir output compiler.ino
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
         with:
-          name: esp32-binaries-default
-          path: output_default/*.bin
-
-      - name: Upload binaries (huge_app partition)
-        uses: actions/upload-artifact@v4
-        with:
-          name: esp32-binaries-huge
-          path: output_huge/*.bin
+          name: firmware
+          path: output/compiler.ino.bin
+          
