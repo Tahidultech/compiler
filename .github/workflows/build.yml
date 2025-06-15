@@ -30,11 +30,7 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Show ESP32 Boards and Partition Schemes
-        run: |
-          arduino-cli board listall esp32:esp32
-          arduino-cli board details esp32:esp32:esp32doit-devkit-v1
-
+    
       - name: Show available partitions
         run: |
           ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
