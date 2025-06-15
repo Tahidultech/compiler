@@ -38,14 +38,14 @@ jobs:
 
       
 
-      - name: Compile Sketch with huge_app partition
+      - name: Compile Sketch with huge_app partition (wrover)
         run: |
           arduino-cli compile \
-            --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --build-property build.partitions=huge_app \
-            --output-dir output_huge \
-            --verbose \
-            compiler.ino
+          --fqbn esp32:esp32:esp32wrover \
+          --build-property build.partitions=huge_app \
+          --output-dir output_huge \
+          --verbose \
+          compiler.ino
 
       - name: Upload binaries (default partition)
         uses: actions/upload-artifact@v4
