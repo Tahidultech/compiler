@@ -37,14 +37,7 @@ jobs:
       - name: Show available partitions
         run: |
           ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
-
-      - name: Compile Sketch with default partition
-        run: |
-          arduino-cli compile \
-            --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --output-dir output \
-            --verbose \
-            compiler.ino
+          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/huge_app.csv
 
       - name: Compile Sketch with huge_app partition
         run: |
@@ -54,3 +47,9 @@ jobs:
             --output-dir output_huge \
             --verbose \
             compiler.ino
+
+      - name: Upload compiled binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-binaries
+          path: output_huge/*.bin
