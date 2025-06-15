@@ -28,7 +28,7 @@ jobs:
         run: |
           arduino-cli compile \
             --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --build-property build.partitions=rainmaker_4MB \
+            --build-property build.partitions=rainmaker_4MB_no_ota \
             --output-dir output \
             compiler.ino
 
@@ -36,7 +36,7 @@ jobs:
         run: |
           arduino-cli compile \
             --fqbn esp32:esp32:esp32 \
-            --build-property build.partitions=rainmaker_4MB \
+            --build-property build.partitions=rainmaker_4MB_no_ota \
             --output-dir output \
             compiler.ino
 
