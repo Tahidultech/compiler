@@ -1,7 +1,9 @@
-name: Build Firmware
+name: ESP32 Build
 
 on:
   push:
+    branches: [ main ]
+  pull_request:
     branches: [ main ]
 
 jobs:
@@ -10,27 +12,45 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Arduino CLI
-        uses: arduino/setup-arduino-cli@v1
+      - name: Set up Python (needed for arduino-cli)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      - name: Install ESP32 Board
+      - name: Install arduino-cli
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Install ESP32 core
         run: |
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Compile Sketch with RainMaker 4MB Partition (esp32c3)
+      - name: Show ESP32 Boards and Partition Schemes
         run: |
-           arduino-cli compile \
-             --fqbn esp32:esp32:esp32c3 \
-             --build-property build.partitions=rainmaker_4MB_no_ota \
-             --output-dir output \
-             compiler.ino
+          arduino-cli board listall esp32:esp32
+          arduino-cli board details esp32:esp32:esp32doit-devkit-v1
 
+      - name: Show available partitions
+        run: |
+          ls $HOME/.arduino15/packages/esp32/hardware/esp32/*/tools/partitions/
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: firmware
-          path: output/compiler.ino.bin
+      - name: Compile Sketch with default partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1 \
+            --output-dir output \
+            --verbose \
+            compiler.ino
+
+      - name: Compile Sketch with huge_app partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1 \
+            --build-property build.partitions=huge_app \
+            --output-dir output_huge \
+            --verbose \
+            compiler.ino
